@@ -304,6 +304,15 @@ $wpf.$FormName.add_Closing({
 #End of load, draw and closing form events
 
 #region Buttons
+
+$wpf.btnRun.add_Click({
+    Run-Command
+})
+
+$wpf.btnQuit.add_Click({
+    $wpf.$FormName.Close()
+})
+
 #endregion
 #End Buttons region
 
