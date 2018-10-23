@@ -1,4 +1,74 @@
-﻿Function Check-E2016ComponentStateToActive {
+﻿Function Test-ExchTools(){
+    <#
+    .SYNOPSIS
+    This small function will just check if you have Exchange tools installed or available on the
+    current PowerShell session.
+
+    .DESCRIPTION
+    The presence of Exchange tools are checked by trying to execute "Get-ExBanner", one of the basic Exchange
+    cmdlets that runs when the Exchange Management Shell is called.
+
+    Just use Test-ExchTools in your script to make the script exit if not launched from an Exchange
+    tools PowerShell session...
+
+    .EXAMPLE
+    Test-ExchTools
+    => will exit the script/program si Exchange tools are not installed
+    #>
+    Try
+    {
+        Get-command Get-MAilbox -ErrorAction Stop
+        $ExchInstalledStatus = $true
+        $Message = "Exchange tools are present !"
+        Write-Host $Message -ForegroundColor Blue -BackgroundColor Red
+    }
+    Catch [System.SystemException]
+    {
+        $ExchInstalledStatus = $false
+        $Message = "Exchange Tools are not present ! This script/tool need these. Exiting..."
+        Write-Host $Message -ForegroundColor red -BackgroundColor Blue
+        Exit
+    }
+    Return $ExchInstalledStatus
+}
+
+Function Title1 ([string]$title, $TotalLength = 100, $Back = "Yellow", $Fore = "Black") {
+    $TitleLength = $Title.Length
+    [string]$StarsBeforeAndAfter = ""
+    $RemainingLength = $TotalLength - $TitleLength
+    If ($($RemainingLength % 2) -ne 0) {
+        $Title = $Title + " "
+    }
+    $Counter = 0
+    For ($i=1;$i -le $(($RemainingLength)/2);$i++) {
+        $StarsBeforeAndAfter += "*"
+        $counter++
+    }
+    
+    $Title = $StarsBeforeAndAfter + $Title + $StarsBeforeAndAfter
+    Write-host
+    Write-Host $Title -BackgroundColor $Back -foregroundcolor $Fore
+    Write-Host    
+}
+
+Function Update-WPFProgressBarAndStatus {
+    Param(  [parameter(Position = 1)][string]$msg="Message",
+            [parameter(Position=2)][int]$p=50,
+            [parameter(Position = 3)][string]$status="Working...",
+            [parameter(position = 4)][string]$color = "#FFC310BB",
+            [parameter(position = 5)][string]$ProgressBarName = "ProgressBar")
+    $wpf.$ProgressBarName.Color = $Color
+    $wpf.$ProgressBarName.Value = $p
+    $wpf.$ProgressBarName.Foreground
+    Title1 $msg; StatusLabel $msg
+    If ($p -eq 100){
+        $status = "Done!"
+    }
+    Write-progress -Activity $msg -Status $status -PercentComplete $p
+}
+
+
+Function Check-E2016ComponentStateToActive {
     <#
     .NOTES
     Based on V1.1 08.06.2014  by Adnan Rafique @ExchangeITPro
@@ -43,77 +113,33 @@
         [Parameter(Mandatory = $false)][switch]$CheckOnly
     )
 
-    Function Title1 ([string]$title, $TotalLength = 100, $Back = "Yellow", $Fore = "Black") {
-        $TitleLength = $Title.Length
-        [string]$StarsBeforeAndAfter = ""
-        $RemainingLength = $TotalLength - $TitleLength
-        If ($($RemainingLength % 2) -ne 0) {
-            $Title = $Title + " "
-        }
-        $Counter = 0
-        For ($i=1;$i -le $(($RemainingLength)/2);$i++) {
-            $StarsBeforeAndAfter += "*"
-            $counter++
-        }
-        
-        $Title = $StarsBeforeAndAfter + $Title + $StarsBeforeAndAfter
-        Write-host
-        Write-Host $Title -BackgroundColor $Back -foregroundcolor $Fore
-        Write-Host    
-    }
-
-    Function Test-ExchTools(){
-        <#
-        .SYNOPSIS
-        This small function will just check if you have Exchange tools installed or available on the
-        current PowerShell session.
-
-        .DESCRIPTION
-        The presence of Exchange tools are checked by trying to execute "Get-ExBanner", one of the basic Exchange
-        cmdlets that runs when the Exchange Management Shell is called.
-
-        Just use Test-ExchTools in your script to make the script exit if not launched from an Exchange
-        tools PowerShell session...
-
-        .EXAMPLE
-        Test-ExchTools
-        => will exit the script/program si Exchange tools are not installed
-        #>
-        Try
-        {
-            Get-command Get-MAilbox -ErrorAction Stop
-            $ExchInstalledStatus = $true
-            $Message = "Exchange tools are present !"
-            Write-Host $Message -ForegroundColor Blue -BackgroundColor Red
-        }
-        Catch [System.SystemException]
-        {
-            $ExchInstalledStatus = $false
-            $Message = "Exchange Tools are not present ! This script/tool need these. Exiting..."
-            Write-Host $Message -ForegroundColor red -BackgroundColor Blue
-            Exit
-        }
-        Return $ExchInstalledStatus
-    }
-
-    If (!(Test-ExchTools)){exit}
-
-    cls
-
     If ($CheckOnly) {
         Title1 "Check only specified - will just list inactive components without trying to activate ..."
     } Else {
         Title1 "CheckOnly NOT specified ... will try to activate everything if more than 2 components are inactive..."
     }
 
+    $msg = "Getting Exchange servers in the current organization ..."
+    $p = 0
+    Update-WPFProgressBarAndStatus $msg $p
+
     $E2016NamesList = @()
     $E2016 = Get-ExchangeServer | ? {$_.AdminDisplayVersion -match "15.1"} 
     Foreach ($item in $E2016){$E2016NamesList += $($item.Name)}
+
+    $msg = "$($E2016.count) servers founs ... parsing each Exchange server ..."
+    $p = 20
+    Update-WPFProgressBarAndStatus $msg $p
 
     $counter = 0
     Foreach ($Server in $E2016){
         Title1 $Server
         write-progress -id 1 -Activity "Activating all components" -Status "Server $Server" -PercentComplete $($Counter/$($E2016.Count)*100)
+
+        $msg = "Parsing $($Server.name) servers founs ..."
+        $p = $($Counter/((100-20)/$($E2016.count))*100)
+        Update-WPFProgressBarAndStatus $msg $p
+
         $Counter++
 
         #Get the status of components
@@ -181,16 +207,34 @@
 
     }
 
+    $msg = "All servers done ..."
+    $p = 100
+    Update-WPFProgressBarAndStatus $msg $p
+
     write-progress -id 1 -Activity "Activating all components" -Status "All done !" -PercentComplete $($Counter/$($E2016.Count)*100)
     sleep 1
 }
 
-Function Update-cmd {
-    
+Function Run-Command {
+    $Command = "Check-E2016ComponentStateToActive"
+    if ($wpf.chkCheckOnly.IsChecked -eq $true) {
+        $Command += " -CheckOnly"
+    }
+    if ($wpf.chkHybridServer.IsChecked -eq $true){
+        $Command += " -HybridServer"
+    }
+
+    Invoke-Expression $Command
 }
+
+
 
 # Load a WPF GUI from a XAML file build with Visual Studio
 Add-Type -AssemblyName presentationframework, presentationcore
+
+#Immediately test for Exchange tools => if not loaded, exit script
+If (!(Test-ExchTools)){exit}
+
 $wpf = @{ }
 # NOTE: Either load from a XAML file or paste the XAML file content in a "Here String"
 #$inputXML = Get-Content -Path ".\WPFGUIinTenLines\MainWindow.xaml"
@@ -202,7 +246,7 @@ $inputXML = @"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Check_E2016ServerComponents"
         mc:Ignorable="d"
-        Title="Exchange Server Components Checker" Height="450" Width="800">
+        Title="Exchange Server Components Checker" Height="513.689" Width="800">
     <Grid>
         <ComboBox x:Name="comboSelectExchangeVersion" HorizontalAlignment="Left" Margin="10,124,0,0" VerticalAlignment="Top" Width="120" SelectedIndex="1" IsReadOnly="True">
             <ComboBoxItem Content="Exchange 2013"/>
@@ -224,7 +268,8 @@ $inputXML = @"
                 </GridView>
             </ListView.View>
         </ListView>
-        <CheckBox Content="HybridServer" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,171,0,0"/>
+        <CheckBox x:Name="chkHybridServer" Content="HybridServer" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,171,0,0"/>
+        <ProgressBar x:Name="ProgressBar" HorizontalAlignment="Left" Height="28" Margin="10,441,0,0" VerticalAlignment="Top" Width="762"/>
     </Grid>
 </Window>
 "@
