@@ -69,9 +69,8 @@ Function Update-WPFProgressBarAndStatus {
             [parameter(Position = 3)][string]$status="Working...",
             [parameter(position = 4)][string]$color = "#FFC310BB",
             [parameter(position = 5)][string]$ProgressBarName = "ProgressBar")
-    $wpf.$ProgressBarName.Color = $Color
+    $wpf.$ProgressBarName.Foreground = $Color
     $wpf.$ProgressBarName.Value = $p
-    $wpf.$ProgressBarName.Foreground
     Title1 $msg; StatusLabel $msg
     If ($p -eq 100){
         $status = "Done!"
@@ -139,21 +138,24 @@ Function Check-E2016ComponentStateToActive {
     $E2016 = Get-ExchangeServer | ? {$_.AdminDisplayVersion -match "15.1"} 
     Foreach ($item in $E2016){$E2016NamesList += $($item.Name)}
 
-    $msg = "$($E2016.count) servers founs ... parsing each Exchange server ..."
+    $msg = "$($E2016.count) servers found ... parsing each Exchange server ..."
     $p = 20
     Update-WPFProgressBarAndStatus $msg $p
 
     $ServerComponentsCollection = @()
     $counter = 0
+    $Counter2 = 0
     Foreach ($Server in $E2016){
         Title1 $Server
         write-progress -id 1 -Activity "Activating all components" -Status "Server $Server" -PercentComplete $($Counter/$($E2016.Count)*100)
 
-        $msg = "Parsing $($Server.name) servers founs ..."
-        $p = $($Counter/((100-20)/$($E2016.count))*100)
+        $msg = "Parsing $($Server.name) server ..."
+        $p = 20 + $Counter2
+
         Update-WPFProgressBarAndStatus $msg $p
 
         $Counter++
+        $Counter2+=((100-20)/$($E2016.count))
 
         #Get the status of components
         If (!($HybridServer)){
@@ -177,6 +179,7 @@ Function Check-E2016ComponentStateToActive {
 
         If ($NbInactiveComponents -eq 0){
             Write-Host "There are no inactive components, everything looks good ... "
+            $ServerComponentsCollection += $ComponentStateStatus
             Continue
         } Else {
             Write-host "Some components are not active - we have $NbInactiveComponents inactive components..."
@@ -216,9 +219,8 @@ Function Check-E2016ComponentStateToActive {
                 Write-Host "Checking only... here's your list of inactive components:"
                 $InactiveComponents | ft Component
             }
-
+            $ServerComponentsCollection += $ComponentStateStatus
         }
-    $ServerComponentsCollection += $ComponentStateStatus
     }
 
     $msg = "All servers done ..."
@@ -226,8 +228,21 @@ Function Check-E2016ComponentStateToActive {
     Update-WPFProgressBarAndStatus $msg $p
 
     write-progress -id 1 -Activity "Activating all components" -Status "All done !" -PercentComplete $($Counter/$($E2016.Count)*100)
-    #sleep 1
-    $wpf.listView.ItemsSource = $ServerComponentsCollection
+    sleep 1
+
+    $PSObjectServerComponentsColl = @()
+    $ServerComponentsCollection | Foreach {
+        $PSObjectSrvComp = [PSCustomObject]@{
+            Server = $_.Identity
+            Component = $_.Component
+            State = $_.State
+        }
+        $PSObjectServerComponentsColl += $PSObjectSrvComp
+    }
+
+    #$PSObjectServerComponentsColl = $PSObjectServerComponentsColl | ConvertTo-CSV -NoTypeInformation
+    $lview = [System.Windows.Data.ListCollectionView]$PSObjectServerComponentsColl
+    $wpf.ListView.ItemsSource = $lview
 }
 
 Function Run-Command {
