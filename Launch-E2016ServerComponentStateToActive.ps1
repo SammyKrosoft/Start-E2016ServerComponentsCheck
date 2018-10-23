@@ -51,6 +51,18 @@ Function Title1 ([string]$title, $TotalLength = 100, $Back = "Yellow", $Fore = "
     Write-Host    
 }
 
+Function StatusLabel {
+    [CmdletBinding()]
+    Param(  [parameter(Position = 1)][string]$msg,
+            [parameter(Position = 2)][string]$LabelObjectName = "lblStatus"
+    )
+    # Trick to enable a Label to update during work :
+    # Follow with "Dispatcher.Invoke("Render",[action][scriptblobk]{})" or [action][scriptblock]::create({})
+    $wpf.$LabelObjectName.Content = $Msg
+    $wpf.$FormName.Dispatcher.Invoke("Render",[action][scriptblock]{})
+}
+
+
 Function Update-WPFProgressBarAndStatus {
     Param(  [parameter(Position = 1)][string]$msg="Message",
             [parameter(Position=2)][int]$p=50,
@@ -270,6 +282,7 @@ $inputXML = @"
         </ListView>
         <CheckBox x:Name="chkHybridServer" Content="HybridServer" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,171,0,0"/>
         <ProgressBar x:Name="ProgressBar" HorizontalAlignment="Left" Height="28" Margin="10,441,0,0" VerticalAlignment="Top" Width="762"/>
+        <Label x:Name="lblStatus" Content="Label" HorizontalAlignment="Left" Margin="262,399,0,0" VerticalAlignment="Top" Width="193"/>
     </Grid>
 </Window>
 "@
