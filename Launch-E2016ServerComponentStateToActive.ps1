@@ -246,7 +246,7 @@ $inputXML = @"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Check_E2016ServerComponents"
         mc:Ignorable="d"
-        Title="Exchange Server Components Checker" Height="513.689" Width="800">
+        Title="Exchange Server Components Checker" Height="513.689" Width="800" ResizeMode="NoResize">
     <Grid>
         <ComboBox x:Name="comboSelectExchangeVersion" HorizontalAlignment="Left" Margin="10,124,0,0" VerticalAlignment="Top" Width="120" SelectedIndex="1" IsReadOnly="True">
             <ComboBoxItem Content="Exchange 2013"/>
@@ -302,6 +302,10 @@ $wpf.$FormName.add_Closing({
 
 #endregion Load, Draw and closing form events
 #End of load, draw and closing form events
+
+#region Buttons
+#endregion
+#End Buttons region
 
 #HINT: to update progress bar and/or label during WPF Form treatment, add the following:
 # ... to re-draw the form and then show updated controls in realtime ...
