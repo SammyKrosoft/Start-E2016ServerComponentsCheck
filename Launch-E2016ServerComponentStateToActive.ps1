@@ -143,6 +143,7 @@ Function Check-E2016ComponentStateToActive {
     $p = 20
     Update-WPFProgressBarAndStatus $msg $p
 
+    $ServerComponentsCollection = @()
     $counter = 0
     Foreach ($Server in $E2016){
         Title1 $Server
@@ -215,8 +216,9 @@ Function Check-E2016ComponentStateToActive {
                 Write-Host "Checking only... here's your list of inactive components:"
                 $InactiveComponents | ft Component
             }
-        }
 
+        }
+    $ServerComponentsCollection += $ComponentStateStatus
     }
 
     $msg = "All servers done ..."
@@ -224,7 +226,8 @@ Function Check-E2016ComponentStateToActive {
     Update-WPFProgressBarAndStatus $msg $p
 
     write-progress -id 1 -Activity "Activating all components" -Status "All done !" -PercentComplete $($Counter/$($E2016.Count)*100)
-    sleep 1
+    #sleep 1
+    $wpf.listView.ItemsSource = $ServerComponentsCollection
 }
 
 Function Run-Command {
@@ -237,6 +240,11 @@ Function Run-Command {
     }
 
     Invoke-Expression $Command
+
+    $msg = "Ready !"
+    $p = 0
+    Update-WPFProgressBarAndStatus $msg $p
+
 }
 
 
