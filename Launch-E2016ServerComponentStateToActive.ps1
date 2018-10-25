@@ -1,4 +1,5 @@
-﻿Function Test-ExchTools(){
+﻿
+Function Test-ExchTools(){
     <#
     .SYNOPSIS
     This small function will just check if you have Exchange tools installed or available on the
@@ -240,9 +241,8 @@ Function Check-E2016ComponentStateToActive {
         $PSObjectServerComponentsColl += $PSObjectSrvComp
     }
 
-    #$PSObjectServerComponentsColl = $PSObjectServerComponentsColl | ConvertTo-CSV -NoTypeInformation
-    $lview = [System.Windows.Data.ListCollectionView]$PSObjectServerComponentsColl
-    $wpf.ListView.ItemsSource = $lview
+    $wpf.ListView.ItemsSource = $PSObjectServerComponentsColl
+
 }
 
 Function Run-Command {
@@ -296,18 +296,20 @@ $inputXML = @"
         <Button x:Name="btnRun" Content="Run" HorizontalAlignment="Left" Margin="10,380,0,0" VerticalAlignment="Top" Width="75"/>
         <Button x:Name="btnQuit" Content="Quit" HorizontalAlignment="Left" Margin="681,380,0,0" VerticalAlignment="Top" Width="75"/>
         <Label Content="List of Exchange components and their state" HorizontalAlignment="Left" Margin="251,168,0,0" VerticalAlignment="Top" Width="246"/>
-        <ListView x:Name="ListView" HorizontalAlignment="Left" Height="147" Margin="10,199,0,0" VerticalAlignment="Top" Width="762">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn/>
-                </GridView>
-            </ListView.View>
-        </ListView>
         <CheckBox x:Name="chkHybridServer" Content="HybridServer" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,171,0,0"/>
         <ProgressBar x:Name="ProgressBar" HorizontalAlignment="Left" Height="28" Margin="10,441,0,0" VerticalAlignment="Top" Width="762"/>
-        <Label x:Name="lblStatus" Content="Label" HorizontalAlignment="Left" Margin="262,399,0,0" VerticalAlignment="Top" Width="193"/>
+        <Label x:Name="lblStatus" Content="Label" HorizontalAlignment="Left" Margin="113,399,0,0" VerticalAlignment="Top" Width="532"/>
+        <CheckBox x:Name="chkInactiveOnly" Content="Show Inactive Only" HorizontalAlignment="Left" Margin="612,174,0,0" VerticalAlignment="Top"/>
+        <DataGrid x:Name="ListView" HorizontalAlignment="Left" Height="144" Margin="10,200,0,0" VerticalAlignment="Top" Width="746" AutoGenerateColumns="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding Server}" Header="Server"/>
+                <DataGridTextColumn Binding="{Binding Component}" Header="Component"/>
+                <DataGridTextColumn Binding="{Binding State}" Header="State"/>
+            </DataGrid.Columns>
+        </DataGrid>
     </Grid>
 </Window>
+
 "@
 
 $inputXMLClean = $inputXML -replace 'mc:Ignorable="d"','' -replace "x:N",'N' -replace 'x:Class=".*?"','' -replace 'd:DesignHeight="\d*?"','' -replace 'd:DesignWidth="\d*?"',''
@@ -351,6 +353,15 @@ $wpf.btnQuit.add_Click({
 
 #endregion
 #End Buttons region
+
+#region Checkboxes
+
+$wpf.chkInactiveOnly.add_Click({
+
+})
+
+#endregion
+#End Checkboxes region
 
 #HINT: to update progress bar and/or label during WPF Form treatment, add the following:
 # ... to re-draw the form and then show updated controls in realtime ...
