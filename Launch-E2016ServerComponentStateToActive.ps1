@@ -146,9 +146,9 @@ Function Check-E2016ComponentStateToActive {
         # Option #4 - a message, a title, buttons, and an icon
         # More info : https://msdn.microsoft.com/en-us/library/system.windows.messageboximage.aspx
         $msg = "No $($wpf.comboSelectExchangeVersion.Text) servers found ... Try another Exchange version..."
-        $Title = "Error"
+        $Title = "Error - No servers found !"
         $Button = "Ok"
-        $Icon = "Error - No servers found !"
+        $Icon = "Error"
         [System.Windows.MessageBox]::Show($msg,$Title, $Button, $icon)
         Return
     }
