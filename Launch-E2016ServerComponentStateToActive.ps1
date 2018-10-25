@@ -384,7 +384,7 @@ $wpf.chkInactiveOnly.add_Click({
             if ($wpf.chkInactiveOnly.isChecked){
                 $wpf.ListView.ItemsSource = $Global:GlobalResult | ? {$_.State -eq "Inactive"}
             } Else {
-                $wpf.ListView.ItemsSource = $Global:GlobalResult 
+                $wpf.ListView.ItemsSource = $Global:GlobalResult
             }
         }
 })
