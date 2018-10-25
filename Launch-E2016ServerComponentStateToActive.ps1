@@ -135,20 +135,36 @@ Function Check-E2016ComponentStateToActive {
     $p = 0
     Update-WPFProgressBarAndStatus $msg $p
 
-    $E2016NamesList = @()
-    $E2016 = Get-ExchangeServer | ? {$_.AdminDisplayVersion -match "15.1"} 
-    Foreach ($item in $E2016){$E2016NamesList += $($item.Name)}
+    $ExchangeNamesList = @()
+    if ($wpf.comboSelectExchangeVersion.SelectedValue -match "Exchange 2016"){
+        $ExchangeServers = Get-ExchangeServer | ? {$_.AdminDisplayVersion -match "15.1"}
+    } Else {
+        $ExchangeServers = Get-ExchangeServer | ? {$_.AdminDisplayVersion -match "15.0"}
+    }
+    
+    If ($ExchangeServers -eq $null) {
+        # Option #4 - a message, a title, buttons, and an icon
+        # More info : https://msdn.microsoft.com/en-us/library/system.windows.messageboximage.aspx
+        $msg = "No $($wpf.comboSelectExchangeVersion.Text) servers found ... Try another Exchange version..."
+        $Title = "Error"
+        $Button = "Ok"
+        $Icon = "Error - No servers found !"
+        [System.Windows.MessageBox]::Show($msg,$Title, $Button, $icon)
+        Return
+    }
 
-    $msg = "$($E2016.count) servers found ... parsing each Exchange server ..."
+    Foreach ($item in $ExchangeServers){$ExchangeNamesList += $($item.Name)}
+
+    $msg = "$($ExchangeServers.count) servers found ... parsing each Exchange server ..."
     $p = 20
     Update-WPFProgressBarAndStatus $msg $p
 
     $ServerComponentsCollection = @()
     $counter = 0
     $Counter2 = 0
-    Foreach ($Server in $E2016){
+    Foreach ($Server in $ExchangeServers){
         Title1 $Server
-        write-progress -id 1 -Activity "Activating all components" -Status "Server $Server" -PercentComplete $($Counter/$($E2016.Count)*100)
+        write-progress -id 1 -Activity "Activating all components" -Status "Server $Server" -PercentComplete $($Counter/$($ExchangeServers.Count)*100)
 
         $msg = "Parsing $($Server.name) server ..."
         $p = 20 + $Counter2
@@ -156,7 +172,7 @@ Function Check-E2016ComponentStateToActive {
         Update-WPFProgressBarAndStatus $msg $p
 
         $Counter++
-        $Counter2+=((100-20)/$($E2016.count))
+        $Counter2+=((100-20)/$($ExchangeServers.count))
 
         #Get the status of components
         If (!($HybridServer)){
@@ -228,7 +244,7 @@ Function Check-E2016ComponentStateToActive {
     $p = 100
     Update-WPFProgressBarAndStatus $msg $p
 
-    write-progress -id 1 -Activity "Activating all components" -Status "All done !" -PercentComplete $($Counter/$($E2016.Count)*100)
+    write-progress -id 1 -Activity "Activating all components" -Status "All done !" -PercentComplete $($Counter/$($ExchangeServers.Count)*100)
     sleep 1
 
     $PSObjectServerComponentsColl = @()
@@ -242,6 +258,9 @@ Function Check-E2016ComponentStateToActive {
     }
 
     $wpf.ListView.ItemsSource = $PSObjectServerComponentsColl
+
+    $Global:GlobalResult = $PSObjectServerComponentsColl
+    return $PSObjectServerComponentsColl
 
 }
 
@@ -344,7 +363,11 @@ $wpf.$FormName.add_Closing({
 #region Buttons
 
 $wpf.btnRun.add_Click({
+    $wpf.ListView.ItemsSource= $null
     Run-Command
+    if ($wpf.chkInactiveOnly.isChecked){
+        $wpf.chkInactiveOnly.IsChecked = $false
+    }
 })
 
 $wpf.btnQuit.add_Click({
@@ -357,7 +380,13 @@ $wpf.btnQuit.add_Click({
 #region Checkboxes
 
 $wpf.chkInactiveOnly.add_Click({
-
+        if ($Global:GlobalResult -ne $null){
+            if ($wpf.chkInactiveOnly.isChecked){
+                $wpf.ListView.ItemsSource = $Global:GlobalResult | ? {$_.State -eq "Inactive"}
+            } Else {
+                $wpf.ListView.ItemsSource = $Global:GlobalResult 
+            }
+        }
 })
 
 #endregion
