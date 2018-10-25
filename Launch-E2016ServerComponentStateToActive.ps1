@@ -366,7 +366,7 @@ $wpf.btnRun.add_Click({
     $wpf.ListView.ItemsSource= $null
     Run-Command
     if ($wpf.chkInactiveOnly.isChecked){
-        $wpf.chkInactiveOnly.IsChecked = $false
+        $wpf.ListView.ItemsSource = $Global:GlobalResult | ? {$_.State -eq "Inactive"}
     }
 })
 
