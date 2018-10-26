@@ -206,7 +206,8 @@ Function Check-E2016ComponentStateToActive {
                 $Counter1 = 0
                 Foreach ($Component in $InactiveComponents) {
                     Write-progress -id 2 -ParentId 1 -Activity "Setting component states" -Status "setting $($Component.Component)..." -PercentComplete ($Counter1/$NbInactiveComponents*100)
-                    $Command = "Set-ServerComponentState $($Server.Name) -Component $($Component.Component) -State Active -Requester Functional" 
+                    $Requester = $wpf.comboBoxRequester.Text
+                    $Command = "Set-ServerComponentState $($Server.Name) -Component $($Component.Component) -State Active -Requester $Requester" 
                     Write-host "Running the following command: `n$Command" -BackgroundColor Blue -ForegroundColor White
                     Invoke-Expression $Command
                     $Counter1++
@@ -312,12 +313,12 @@ $inputXML = @"
                 <DropShadowEffect ShadowDepth="10" Color="#FFACD151"/>
             </TextBox.Effect>
         </TextBox>
-        <Button x:Name="btnRun" Content="Run" HorizontalAlignment="Left" Margin="10,380,0,0" VerticalAlignment="Top" Width="75"/>
+        <Button x:Name="btnRun" Content="Run" HorizontalAlignment="Left" Margin="12,357,0,0" VerticalAlignment="Top" Width="74"/>
         <Button x:Name="btnQuit" Content="Quit" HorizontalAlignment="Left" Margin="681,380,0,0" VerticalAlignment="Top" Width="75"/>
         <Label Content="List of Exchange components and their state" HorizontalAlignment="Left" Margin="251,168,0,0" VerticalAlignment="Top" Width="246"/>
         <CheckBox x:Name="chkHybridServer" Content="HybridServer" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,171,0,0"/>
         <ProgressBar x:Name="ProgressBar" HorizontalAlignment="Left" Height="28" Margin="10,441,0,0" VerticalAlignment="Top" Width="762"/>
-        <Label x:Name="lblStatus" Content="Label" HorizontalAlignment="Left" Margin="113,399,0,0" VerticalAlignment="Top" Width="532"/>
+        <Label x:Name="lblStatus" Content="Ready !" HorizontalAlignment="Left" Margin="12,409,0,0" VerticalAlignment="Top" Width="760"/>
         <CheckBox x:Name="chkInactiveOnly" Content="Show Inactive Only" HorizontalAlignment="Left" Margin="612,174,0,0" VerticalAlignment="Top"/>
         <DataGrid x:Name="ListView" HorizontalAlignment="Left" Height="144" Margin="10,200,0,0" VerticalAlignment="Top" Width="746" AutoGenerateColumns="False">
             <DataGrid.Columns>
@@ -326,9 +327,14 @@ $inputXML = @"
                 <DataGridTextColumn Binding="{Binding State}" Header="State"/>
             </DataGrid.Columns>
         </DataGrid>
+        <ComboBox x:Name="comboBoxRequester" HorizontalAlignment="Left" Margin="12,382,0,0" VerticalAlignment="Top" Width="120" SelectedIndex="2" IsEnabled="False">
+            <ComboBoxItem Content="Maintenance"/>
+            <ComboBoxItem Content="Sidelined"/>
+            <ComboBoxItem Content="Functional"/>
+            <ComboBoxItem Content="Deployment"/>
+        </ComboBox>
     </Grid>
 </Window>
-
 "@
 
 $inputXMLClean = $inputXML -replace 'mc:Ignorable="d"','' -replace "x:N",'N' -replace 'x:Class=".*?"','' -replace 'd:DesignHeight="\d*?"','' -replace 'd:DesignWidth="\d*?"',''
@@ -347,6 +353,11 @@ $FormName = $NamedNodes[0].Name
 #Things to load when the WPF form is loaded aka in memory
 $wpf.$FormName.Add_Loaded({
     #Update-Cmd
+    if ($wpf.chkCheckOnly.IsChecked -eq $true){
+        $wpf.comboBoxRequester.IsEnabled = $false
+    } Else {
+        $wpf.comboBoxRequester.IsEnabled = $True
+    }
 })
 #Things to load when the WPF form is rendered aka drawn on screen
 $wpf.$FormName.Add_ContentRendered({
@@ -389,6 +400,13 @@ $wpf.chkInactiveOnly.add_Click({
         }
 })
 
+$wpf.chkCheckOnly.add_Click({
+    if ($wpf.chkCheckOnly.IsChecked){
+        $wpf.comboBoxRequester.IsEnabled = $false
+    } Else {
+        $wpf.comboBoxRequester.IsEnabled = $true
+    }
+})
 #endregion
 #End Checkboxes region
 
