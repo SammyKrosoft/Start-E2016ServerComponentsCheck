@@ -27,5 +27,5 @@ And finally, you're able to start the Exchange Server Components with the reques
 
 ![screenshot3](DocResources/image2.jpg)
 
-More information on these Server Components:
+More information on these Exchange Server Components:
 https://blogs.technet.microsoft.com/exchange/2013/09/26/server-component-states-in-exchange-2013/
