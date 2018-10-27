@@ -11,10 +11,10 @@ These “Server Components” are new in Exchange 2013/2016, these are part of t
 
 
 -	Choose your server version, Exchange 2013 or Exchange 2016, to check the components from
--	[  ] CheckOnly checkbox will just check and show each component from each of your organization’s servers: if checked, the tool will not attempt to start the inactive components
--	[  ] HybridServer checkbox will check two additional components that are used on Hybrid Exchange – O365 scenarios
--	[  ] Show Inactive Only : this checkbox will filter out all the Active components, so that you can check right away which servers and which components have Inactive services. You can check or uncheck it anytime, before or after the Server Components collection
--	Once you are happy with the chosen options, click the [Run] button to start gathering the information (at the bottom is the status bar along with a status label)
+-	**[  ] CheckOnly** checkbox will just check and show each component from each of your organization’s servers: if checked, the tool will not attempt to start the inactive components
+-	**[  ] HybridServer** checkbox will check two additional components that are used on Hybrid Exchange – O365 scenarios
+-	**[  ] Show Inactive Only** : this checkbox will filter out all the Active components, so that you can check right away which servers and which components have Inactive services. You can check or uncheck it anytime, before or after the Server Components collection
+-	Once you are happy with the chosen options, click the **[Run]** button to start gathering the information (at the bottom is the status bar along with a status label)
 
 
  
