@@ -19,7 +19,7 @@ These “Server Components” are new in Exchange 2013/2016, these are part of t
 ![screenshot1](.\Doc REsources\image1.jpg)
  
 
-NOTE: once the components are gathered and show up, you can select all (click on one of the result cell, then CTRL+ a followed by CTRL + v) and paste it in a report, in Excel or in an e-mail if one day I ask you to:
+NOTE: once the components are gathered and show up, you can select all (click on one of the result cell, then CTRL+ a followed by CTRL + v) and paste it in a report, in Excel:
  
 
 
