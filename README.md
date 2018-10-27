@@ -16,12 +16,16 @@ These “Server Components” are new in Exchange 2013/2016, these are part of t
 -	**[  ] Show Inactive Only** : this checkbox will filter out all the Active components, so that you can check right away which servers and which components have Inactive services. You can check or uncheck it anytime, before or after the Server Components collection
 -	Once you are happy with the chosen options, click the **[Run]** button to start gathering the information (at the bottom is the status bar along with a status label)
 
-![screenshot1](DocResources/image1.jpg)
+![screenshot1](DocResources/image0.jpg)
  
 
 NOTE: once the components are gathered and show up, you can select all (click on one of the result cell, then CTRL+ a followed by CTRL + v) and paste it in a report, in Excel:
  
+![screenshot2](DocResources/image1.jpg)
 
+And finally, you're able to start the Exchange Server Components with the requester of your choice (Maintenance, SideLine, Functional, Deployment,...) - just uncheck the **[ ] CheckOnly** check box, choose your requester, and click **[Run]**
+
+![screenshot3](DocResources/image2.jpg)
 
 More information on these Server Components:
 https://blogs.technet.microsoft.com/exchange/2013/09/26/server-component-states-in-exchange-2013/
