@@ -1,4 +1,30 @@
-﻿Function IsPSV3 {
+﻿<#
+.SYNOPSIS
+    This is a WPF GUI that helps to check and bring Exchange Server components to active state.
+
+.DESCRIPTION
+    This is a WPF GUI that helps to check and bring Exchange Server components to active state.    Longer description of what this script does
+
+.EXAMPLE
+.\Do-Something.ps1
+
+.NOTES
+See https://github.com/SammyKrosoft for Readme.md and screenshots...
+
+.LINK
+    https://github.com/SammyKrosoft
+#>
+
+$Version = "v1.5"
+<#Change history
+- v1.5:
+Added ability to filter by server or display for all servers (# Servers...)
+Added basic stats (# active components / # inactive components)
+- v1:
+First published version
+#>
+
+Function IsPSV3 {
     <#
     .DESCRIPTION
     Just printing Powershell version and returning "true" if powershell version
@@ -21,7 +47,28 @@
         }
 }
 
+Function Update-ListView {
+    if ($Global:GlobalResult -ne $null){
+        if ($wpf.chkInactiveOnly.isChecked){
+            if ($wpf.comboBoxServers.selectedValue -eq $Global:FirstComboBoxServersValue){
+                $wpf.ListView.ItemsSource = $Global:GlobalResult | ? {$_.State -eq "Inactive"}                
+            } Else {
+                $wpf.ListView.ItemsSource = $Global:GlobalResult | ? {$_.State -eq "Inactive" -and $_.Server -eq $($wpf.comboBoxServers.SelectedValue)}
+            }
+        } Else {
+            if ($wpf.comboBoxServers.selectedValue -ne $Global:FirstComboBoxServersValue){
+                $wpf.ListView.ItemsSource = $Global:GlobalResult | ? {$_.Server -eq $($wpf.comboBoxServers.SelectedValue)}
+            } Else {
+                $wpf.ListView.ItemsSource = $Global:GlobalResult}
+        }
+        $TotalNbActiveComponents = ($wpf.ListView.ItemsSource | ? {$_.State -eq "Active"}).count
+        $TotalNbInactiveComponents = ($wpf.ListView.ItemsSource | ? {$_.State -eq "Inactive"}).count
+    
+        $wpf.txtNbActiveComponents.text = $TotalNbActiveComponents
+        $wpf.txtNbInactiveComponents.text = $TotalNbInactiveComponents
+    }
 
+}
 Function Test-ExchTools(){
     <#
     .SYNOPSIS
@@ -433,9 +480,7 @@ $wpf.$FormName.add_Closing({
 $wpf.btnRun.add_Click({
     $wpf.ListView.ItemsSource= $null
     Run-Command
-    if ($wpf.chkInactiveOnly.isChecked){
-        $wpf.ListView.ItemsSource = $Global:GlobalResult | ? {$_.State -eq "Inactive"}
-    }
+    Update-ListView
 })
 
 $wpf.btnQuit.add_Click({
@@ -448,25 +493,7 @@ $wpf.btnQuit.add_Click({
 #region Checkboxes
 
 $wpf.chkInactiveOnly.add_Click({
-    if ($Global:GlobalResult -ne $null){
-        if ($wpf.chkInactiveOnly.isChecked){
-            if ($wpf.comboBoxServers.selectedValue -eq $Global:FirstComboBoxServersValue){
-                $wpf.ListView.ItemsSource = $Global:GlobalResult | ? {$_.State -eq "Inactive"}                
-            } Else {
-                $wpf.ListView.ItemsSource = $Global:GlobalResult | ? {$_.State -eq "Inactive" -and $_.Server -eq $($wpf.comboBoxServers.SelectedValue)}
-            }
-        } Else {
-            if ($wpf.comboBoxServers.selectedValue -ne $Global:FirstComboBoxServersValue){
-                $wpf.ListView.ItemsSource = $Global:GlobalResult | ? {$_.Server -eq $($wpf.comboBoxServers.SelectedValue)}
-            } Else {
-                $wpf.ListView.ItemsSource = $Global:GlobalResult}
-        }
-        $TotalNbActiveComponents = ($wpf.ListView.ItemsSource | ? {$_.State -eq "Active"}).count
-        $TotalNbInactiveComponents = ($wpf.ListView.ItemsSource | ? {$_.State -eq "Inactive"}).count
-    
-        $wpf.txtNbActiveComponents.text = $TotalNbActiveComponents
-        $wpf.txtNbInactiveComponents.text = $TotalNbInactiveComponents
-    }
+    Update-ListView
 })
 
 $wpf.chkCheckOnly.add_Click({
@@ -480,25 +507,7 @@ $wpf.chkCheckOnly.add_Click({
 #End Checkboxes region
 
 $wpf.comboBoxServers.add_DropDownClosed({
-    if ($Global:GlobalResult -ne $null){
-        if ($wpf.chkInactiveOnly.isChecked){
-            if ($wpf.comboBoxServers.selectedValue -eq $Global:FirstComboBoxServersValue){
-                $wpf.ListView.ItemsSource = $Global:GlobalResult | ? {$_.State -eq "Inactive"}                
-            } Else {
-                $wpf.ListView.ItemsSource = $Global:GlobalResult | ? {$_.State -eq "Inactive" -and $_.Server -eq $($wpf.comboBoxServers.SelectedValue)}
-            }
-        } Else {
-            if ($wpf.comboBoxServers.selectedValue -ne $Global:FirstComboBoxServersValue){
-                $wpf.ListView.ItemsSource = $Global:GlobalResult | ? {$_.Server -eq $($wpf.comboBoxServers.SelectedValue)}
-            } Else {
-                $wpf.ListView.ItemsSource = $Global:GlobalResult}
-        }
-        $TotalNbActiveComponents = ($wpf.ListView.ItemsSource | ? {$_.State -eq "Active"}).count
-        $TotalNbInactiveComponents = ($wpf.ListView.ItemsSource | ? {$_.State -eq "Inactive"}).count
-    
-        $wpf.txtNbActiveComponents.text = $TotalNbActiveComponents
-        $wpf.txtNbInactiveComponents.text = $TotalNbInactiveComponents
-    }
+    Update-ListView
 })
 
 #HINT: to update progress bar and/or label during WPF Form treatment, add the following:
