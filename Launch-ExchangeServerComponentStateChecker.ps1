@@ -176,9 +176,9 @@ Function Check-E2016ComponentStateToActive {
         Return
     } Else {
         $wpf.comboBoxServers.Items.Clear()
-        $wpf.comboBoxServers.Items.Add("All")
+        $wpf.comboBoxServers.Items.AddChild("All")
         Foreach ($Server in $ExchangeServers){
-            $wpf.comboBoxServers.Add($($Server.Name))
+            $wpf.comboBoxServers.AddChild($($Server.Name))
         }
     }
 
