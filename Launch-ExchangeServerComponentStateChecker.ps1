@@ -175,11 +175,14 @@ Function Check-E2016ComponentStateToActive {
         [System.Windows.MessageBox]::Show($msg,$Title, $Button, $icon)
         Return
     } Else {
+        $ServerCount = $ExchangeServers.Count
+        $Global:FirstComboBoxServersValue = "$ServerCount Servers..."
         $wpf.comboBoxServers.Items.Clear()
-        $wpf.comboBoxServers.Items.AddChild("All")
+        $wpf.comboBoxServers.AddChild($Global:FirstComboBoxServersValue)
         Foreach ($Server in $ExchangeServers){
             $wpf.comboBoxServers.AddChild($($Server.Name))
         }
+        $wpf.comboBoxServers.SelectedVAlue = $Global:FirstComboBoxServersValue
     }
 
     Foreach ($item in $ExchangeServers){$ExchangeNamesList += $($item.Name)}
@@ -424,13 +427,20 @@ $wpf.btnQuit.add_Click({
 #region Checkboxes
 
 $wpf.chkInactiveOnly.add_Click({
-        if ($Global:GlobalResult -ne $null){
-            if ($wpf.chkInactiveOnly.isChecked){
-                $wpf.ListView.ItemsSource = $Global:GlobalResult | ? {$_.State -eq "Inactive"}
+    if ($Global:GlobalResult -ne $null){
+        if ($wpf.chkInactiveOnly.isChecked){
+            if ($wpf.comboBoxServers.selectedValue -eq $Global:FirstComboBoxServersValue){
+                $wpf.ListView.ItemsSource = $Global:GlobalResult | ? {$_.State -eq "Inactive"}                
             } Else {
-                $wpf.ListView.ItemsSource = $Global:GlobalResult
+                $wpf.ListView.ItemsSource = $Global:GlobalResult | ? {$_.State -eq "Inactive" -and $_.Server -eq $($wpf.comboBoxServers.SelectedValue)}
             }
+        } Else {
+            if ($wpf.comboBoxServers.selectedValue -ne $Global:FirstComboBoxServersValue){
+                $wpf.ListView.ItemsSource = $Global:GlobalResult | ? {$_.Server -eq $($wpf.comboBoxServers.SelectedValue)}
+            } Else {
+                $wpf.ListView.ItemsSource = $Global:GlobalResult}
         }
+    }
 })
 
 $wpf.chkCheckOnly.add_Click({
@@ -442,6 +452,23 @@ $wpf.chkCheckOnly.add_Click({
 })
 #endregion
 #End Checkboxes region
+
+$wpf.comboBoxServers.add_DropDownClosed({
+    if ($Global:GlobalResult -ne $null){
+        if ($wpf.chkInactiveOnly.isChecked){
+            if ($wpf.comboBoxServers.selectedValue -eq $Global:FirstComboBoxServersValue){
+                $wpf.ListView.ItemsSource = $Global:GlobalResult | ? {$_.State -eq "Inactive"}                
+            } Else {
+                $wpf.ListView.ItemsSource = $Global:GlobalResult | ? {$_.State -eq "Inactive" -and $_.Server -eq $($wpf.comboBoxServers.SelectedValue)}
+            }
+        } Else {
+            if ($wpf.comboBoxServers.selectedValue -ne $Global:FirstComboBoxServersValue){
+                $wpf.ListView.ItemsSource = $Global:GlobalResult | ? {$_.Server -eq $($wpf.comboBoxServers.SelectedValue)}
+            } Else {
+                $wpf.ListView.ItemsSource = $Global:GlobalResult}
+        }
+    }
+})
 
 #HINT: to update progress bar and/or label during WPF Form treatment, add the following:
 # ... to re-draw the form and then show updated controls in realtime ...
