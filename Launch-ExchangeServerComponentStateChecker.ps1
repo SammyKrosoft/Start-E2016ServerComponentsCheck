@@ -478,11 +478,11 @@ $wpf.$FormName.add_Closing({
 #region Buttons
 
 $wpf.btnRun.add_Click({
-    $wpf.$FormName.IsActive = $false
+    $wpf.$FormName.IsEnabled = $false
     $wpf.ListView.ItemsSource= $null
     Run-Command
     Update-ListView
-    $wpf.$FormName.IsActive = $true
+    $wpf.$FormName.IsEnabled = $true
 })
 
 $wpf.btnQuit.add_Click({
