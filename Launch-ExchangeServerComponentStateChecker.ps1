@@ -6,7 +6,7 @@
     This is a WPF GUI that helps to check and bring Exchange Server components to active state.    Longer description of what this script does
 
 .NOTES
-See https://github.com/SammyKrosoft for Readme.md and screenshots...
+    See https://github.com/SammyKrosoft for Readme.md and screenshots...
 
 .LINK
     https://github.com/SammyKrosoft
