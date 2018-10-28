@@ -174,6 +174,12 @@ Function Check-E2016ComponentStateToActive {
         $Icon = "Error"
         [System.Windows.MessageBox]::Show($msg,$Title, $Button, $icon)
         Return
+    } Else {
+        $wpf.comboBoxServers.Items.Clear()
+        $wpf.comboBoxServers.Items.Add("All")
+        Foreach ($Server in $ExchangeServers){
+            $wpf.comboBoxServers.Add($($Server.Name))
+        }
     }
 
     Foreach ($item in $ExchangeServers){$ExchangeNamesList += $($item.Name)}
@@ -352,12 +358,14 @@ $inputXML = @"
                 <DataGridTextColumn Binding="{Binding State}" Header="State"/>
             </DataGrid.Columns>
         </DataGrid>
-        <ComboBox x:Name="comboBoxRequester" HorizontalAlignment="Left" Margin="12,382,0,0" VerticalAlignment="Top" Width="120" SelectedIndex="2" IsEnabled="False">
+        <ComboBox x:Name="comboBoxRequester" HorizontalAlignment="Left" Margin="198,357,0,0" VerticalAlignment="Top" Width="120" SelectedIndex="2" IsEnabled="False">
             <ComboBoxItem Content="Maintenance"/>
             <ComboBoxItem Content="Sidelined"/>
             <ComboBoxItem Content="Functional"/>
             <ComboBoxItem Content="Deployment"/>
         </ComboBox>
+        <Label x:Name="lblRequester" Content="Requester:" HorizontalAlignment="Left" Margin="121,357,0,0" VerticalAlignment="Top" Width="72"/>
+        <ComboBox x:Name="comboBoxServers" HorizontalAlignment="Left" Margin="612,124,0,0" VerticalAlignment="Top" Width="120"/>
     </Grid>
 </Window>
 "@
