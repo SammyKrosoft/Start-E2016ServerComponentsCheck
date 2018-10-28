@@ -278,7 +278,7 @@ Function Check-E2016ComponentStateToActive {
     Update-WPFProgressBarAndStatus $msg $p
 
     write-progress -id 1 -Activity "Activating all components" -Status "All done !" -PercentComplete $($Counter/$($ExchangeServers.Count)*100)
-    sleep 1
+    #sleep 1
 
     $PSObjectServerComponentsColl = @()
     $ServerComponentsCollection | Foreach {
@@ -291,6 +291,12 @@ Function Check-E2016ComponentStateToActive {
     }
 
     $wpf.ListView.ItemsSource = $PSObjectServerComponentsColl
+
+    $TotalNbActiveComponents = ($wpf.ListView.ItemsSource | ? {$_.State -eq "Active"}).count
+    $TotalNbInactiveComponents = ($wpf.ListView.ItemsSource | ? {$_.State -eq "Inactive"}).count
+
+    $wpf.txtNbActiveComponents.text = $TotalNbActiveComponents
+    $wpf.txtNbInactiveComponents.text = $TotalNbInactiveComponents
 
     $Global:GlobalResult = $PSObjectServerComponentsColl
     return $PSObjectServerComponentsColl
@@ -369,6 +375,21 @@ $inputXML = @"
         </ComboBox>
         <Label x:Name="lblRequester" Content="Requester:" HorizontalAlignment="Left" Margin="121,357,0,0" VerticalAlignment="Top" Width="72"/>
         <ComboBox x:Name="comboBoxServers" HorizontalAlignment="Left" Margin="612,124,0,0" VerticalAlignment="Top" Width="120"/>
+        <TextBlock x:Name="txtNbActiveComponents" HorizontalAlignment="Left" Margin="564,357,0,0" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Width="62"/>
+        <TextBlock x:Name="txtNbInactiveComponents" HorizontalAlignment="Left" Margin="564,378,0,0" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Width="62"/>
+        <Label Content="Nb of active componnents:" HorizontalAlignment="Left" Margin="396,352,0,0" VerticalAlignment="Top"/>
+        <Label Content="Nb of inactive componnents:" HorizontalAlignment="Left" Margin="396,373,0,0" VerticalAlignment="Top"/>
+        <Rectangle HorizontalAlignment="Left" Height="47" Margin="396,352,0,0" VerticalAlignment="Top" Width="230">
+            <Rectangle.Stroke>
+                <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ActiveBorderColorKey}}"/>
+            </Rectangle.Stroke>
+        </Rectangle>
+        <Label Content="Servers found -&gt;" HorizontalAlignment="Left" Margin="507,122,0,0" VerticalAlignment="Top" Width="100"/>
+        <Rectangle HorizontalAlignment="Left" Height="29" Margin="245,167,0,0" VerticalAlignment="Top" Width="255">
+            <Rectangle.Stroke>
+                <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ActiveBorderColorKey}}"/>
+            </Rectangle.Stroke>
+        </Rectangle>
     </Grid>
 </Window>
 "@
@@ -440,6 +461,11 @@ $wpf.chkInactiveOnly.add_Click({
             } Else {
                 $wpf.ListView.ItemsSource = $Global:GlobalResult}
         }
+        $TotalNbActiveComponents = ($wpf.ListView.ItemsSource | ? {$_.State -eq "Active"}).count
+        $TotalNbInactiveComponents = ($wpf.ListView.ItemsSource | ? {$_.State -eq "Inactive"}).count
+    
+        $wpf.txtNbActiveComponents.text = $TotalNbActiveComponents
+        $wpf.txtNbInactiveComponents.text = $TotalNbInactiveComponents
     }
 })
 
@@ -467,6 +493,11 @@ $wpf.comboBoxServers.add_DropDownClosed({
             } Else {
                 $wpf.ListView.ItemsSource = $Global:GlobalResult}
         }
+        $TotalNbActiveComponents = ($wpf.ListView.ItemsSource | ? {$_.State -eq "Active"}).count
+        $TotalNbInactiveComponents = ($wpf.ListView.ItemsSource | ? {$_.State -eq "Inactive"}).count
+    
+        $wpf.txtNbActiveComponents.text = $TotalNbActiveComponents
+        $wpf.txtNbInactiveComponents.text = $TotalNbInactiveComponents
     }
 })
 
