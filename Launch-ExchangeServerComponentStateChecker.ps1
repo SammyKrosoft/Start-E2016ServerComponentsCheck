@@ -12,8 +12,11 @@
     https://github.com/SammyKrosoft
 #>
 
-$Version = "v1.5"
+$Version = "v1.5.1"
 <#Change history
+- v1.5.1
+Deactivate the form while running
+Reactivate the form while running
 - v1.5:
 Added ability to filter by server or display for all servers (# Servers...)
 Added basic stats (# active components / # inactive components)
@@ -475,9 +478,11 @@ $wpf.$FormName.add_Closing({
 #region Buttons
 
 $wpf.btnRun.add_Click({
+    $wpf.$FormName.IsActive = $false
     $wpf.ListView.ItemsSource= $null
     Run-Command
     Update-ListView
+    $wpf.$FormName.IsActive = $true
 })
 
 $wpf.btnQuit.add_Click({
