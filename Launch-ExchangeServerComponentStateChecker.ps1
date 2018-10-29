@@ -15,6 +15,8 @@ $language = "EN"
 $Version = "v1.6"
 <#Change history
 - v1.6
+    Excluded Edge servers for cases when Edge are installed on the AD forest instead
+    of the recommended DMZ (??)
     Added HealthAPI requester
 - v1.5.4
     Add maple leaf as icon
