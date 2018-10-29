@@ -14,6 +14,8 @@
 
 $Version = "v1.5.2"
 <#Change history
+- v1.5.2
+Added version number in Title
 - v1.5.1
 Deactivate the form while running
 Reactivate the form while running
