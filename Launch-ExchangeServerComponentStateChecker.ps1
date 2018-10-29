@@ -462,6 +462,7 @@ $wpf.$FormName.Add_Loaded({
     } Else {
         $wpf.comboBoxRequester.IsEnabled = $True
     }
+    $wpf.$FormName.Title += " - $Version"
 })
 #Things to load when the WPF form is rendered aka drawn on screen
 $wpf.$FormName.Add_ContentRendered({
