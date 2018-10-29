@@ -473,7 +473,7 @@ $inputXML = @"
                 <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ActiveBorderColorKey}}"/>
             </Rectangle.Stroke>
         </Rectangle>
-        <Label x:Name="lblabout" Content="" HorizontalAlignment="Left" Margin="762,10,0,0" VerticalAlignment="Top" Width="22"/>
+        <Label x:Name="lblabout" Content="." HorizontalAlignment="Center" Margin="774,0,0,0" VerticalAlignment="Top" Width="20" Height="24" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
     </Grid>
 </Window>
 "@
@@ -527,7 +527,7 @@ $wpf.btnQuit.add_Click({
     $wpf.$FormName.Close()
 })
 
-$wpf.lblAbout_AddClick($lblabout_Click)
+$wpf.lblAbout.Add_MouseLeftButtonDown($lblabout_Click)
 #endregion
 #End Buttons region
 
