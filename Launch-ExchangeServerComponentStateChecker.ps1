@@ -12,8 +12,10 @@
     https://github.com/SammyKrosoft
 #>
 $language = "EN"
-$Version = "v1.5.3"
+$Version = "v1.5.4"
 <#Change history
+- v1.5.4
+Add maple leaf as icon
 - v1.5.3
 Add about (hidden)
 - v1.5.2
@@ -488,6 +490,18 @@ $namedNodes | ForEach-Object {$wpf.Add($_.Name, $tempform.FindName($_.Name))}
 #Get the form name to be used as parameter in functions external to form...
 $FormName = $NamedNodes[0].Name
 
+#extra added on v1.5.4 - maple leaf encoding
+$base64 = "iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAHYYAAB2GAV2iE4EAAAIOSURBVFhHvZfBTsJAEIZ/DG/gE4iJ0RAPJvIAkHD0ATzrA8gD4AUvJN6MMR54BB/AizfPPXgxMehVoyRgCKAhWWfcabq2pd3uIl/yl9nZ2ZntlJZSUgRcubsDSiWgXhdHcfw2wMUZjxRr8lmciwsxCNMuiHsHwrMPcUxj14HHR6DZlAFxeCiGgenjWF5jA3fACn2OSm1tRXZc5pwl9pHb21HyPHGsJfZfwiK3WoHYxRt4exNDaDTEsCAeG89lIp1IUi4rdX0tA+LjI73daeLYEM7BuRYA1e/rRQcHSp2fKxUESr2+RslubiSUCH15CuG1oY9zcm6uwbXYR7V1dBi0SLe3v2GqVkufN7W/r2N5Tdq8KUIfj4+Tk3FdXSm1vp4+Z4pjODZtzhTXJMgi7u+TAf8trklEj+L4o/W/kbJrGI+Bk5PfwUrhmlxbtdt/W7NKUW06EuGtuEpxTYIsg2o1GbhscQ0D8sTodJKLlqWzMykSQd4Unp6Si33FOVOgmQx2dpKJiopzZJD/Sub7fMhJn/0+kPUzaktOjuwOtNtArwfs7QEbG0ClorW5CezuAt0u8PUFnJ4CDw9Avw88P2u9vABBABwdAZ2OJEzi/lbMXF4C399AqyWO4rj/L2De34HPTxm44beB0QiYTmXght8GJhN9CTzw28BgAMznMnDDvwOzmQzc8NvAcKg34QzwAxxYrwxNP4cjAAAAAElFTkSuQmCC"
+ 
+# Create a streaming image by streaming the base64 string to a bitmap streamsource
+$bitmap = New-Object System.Windows.Media.Imaging.BitmapImage
+$bitmap.BeginInit()
+$bitmap.StreamSource = [System.IO.MemoryStream][System.Convert]::FromBase64String($base64)
+$bitmap.EndInit()
+$bitmap.Freeze()
+ 
+# This is the icon in the upper left hand corner of the app
+$wpf.$FormName.Icon = $bitmap
 
 #Define events functions
 #region Load, Draw (render) and closing form events
