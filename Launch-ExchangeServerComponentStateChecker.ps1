@@ -12,7 +12,7 @@
     https://github.com/SammyKrosoft
 #>
 
-$Version = "v1.5.1"
+$Version = "v1.5.2"
 <#Change history
 - v1.5.1
 Deactivate the form while running
