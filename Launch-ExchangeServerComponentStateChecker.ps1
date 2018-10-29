@@ -11,9 +11,11 @@
 .LINK
     https://github.com/SammyKrosoft
 #>
-
-$Version = "v1.5.2"
+$language = "EN"
+$Version = "v1.5.3"
 <#Change history
+- v1.5.3
+Add about (hidden)
 - v1.5.2
 Added version number in Title
 - v1.5.1
@@ -352,6 +354,38 @@ Function Check-E2016ComponentStateToActive {
 
 }
 
+$lblabout_Click = {
+    switch ($Language)
+    {
+        "EN"
+        {
+            $systemst = "QXV0aG9yOiBTYW0gRHJleQ0Kc2FtZHJleUBtaWNyb3NvZnQuY29tDQpzYW1teUBob3RtYWlsLmZyDQpNaWNyb3NvZnQgRW`
+        5naW5lZXIgc2luY2UgT2N0IDE5OTkNCjE5OTktMjAwMDogUHJlc2FsZXMgRW5naW5lZXIgKEZyYW5jZSkNCjIwMDAtMjAwMzogU3VwcG9yd`
+        CBFbmdpbmVlciAoRnJhbmNlKQ0KMjAwMy0yMDA2OiB2ZXJ5IGZpcnN0IFBGRSBpbiBGcmFuY2UNCjIwMDYtMjAwOTogTUNTIENvbnN1bHRhb`
+        nQgKEZyYW5jZSkNCjIwMDktMjAxMDogVEFNIChGcmFuY2UpDQoyMDEwLW5vdyA6IENvbnN1bHRhbnQgKENhbmFkYSkNCk11c2ljaWFuLCBjb`
+        21wb3NlciAoS2V5Ym9hcmQsIEd1aXRhcikNClBsYW5lIHBpbG90IHNpbmNlIDE5OTUNCkZvciBTaGFyZWQgU2VydmljZXMgQ2FuYWRh"
+        } 
+        "FR"
+        {
+            $systemst = "QXV0ZXVyOiBTYW0gRHJleQ0Kc2FtZHJleUBtaWNyb3NvZnQuY29tDQpzYW1teUBob3RtYWlsLmZyDQpJbmfDqW5pZXVyIGNo`
+        ZXogTWljcm9zb2Z0IGRlcHVpcyBPY3QgMTk5OQ0KMTk5OS0yMDAwOiBJbmfDqW5pZXVyIEF2YW50LVZlbnRlIChGcmFuY2UpDQoyMDAwLTIwMD`
+        M6IFNww6ljaWFsaXN0ZSBUZWNobmlxdWUgKEZyYW5jZSkNCjIwMDMtMjAwNjogUHJlbWllciBQRkUgZW4gRnJhbmNlDQoyMDA2LTIwMDk6IENv`
+        bnN1bHRhbnQgTUNTIChGcmFuY2UpDQoyMDA5LTIwMTA6IFJlc3BvbnNhYmxlIFRlY2huaXF1ZSBkZSBDb21wdGUgKEZyYW5jZSkNCjIwMTAtMjA`
+        xNiA6IENvbnN1bHRhbnQgKENhbmFkYSkNCk11c2ljaWVuLCBjb21wb3NpdGV1ciAoQ2xhdmllciwgR3VpdGFyZSkNCkJyZXZldCBkZSBQaWxvdGU`
+        gUHJpdsOpIGRlcHVpcyAxOTk1DQpQb3VyIFNlcnZpY2VzIFBhcnRhZ8OpcyBDYW5hZGE="
+        }
+    }
+    $systemst = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($systemst))
+    # Option #4 - a message, a title, buttons, and an icon
+    # More info : https://msdn.microsoft.com/en-us/library/system.windows.messageboximage.aspx
+    $msg = $systemst
+    $Title = $wpf.$FormName.Title
+    $Button = "Ok"
+    $Icon = "Information"
+    [System.Windows.MessageBox]::Show($msg,$Title, $Button, $icon)
+}
+
+
 Function Run-Command {
     $Command = "Check-E2016ComponentStateToActive"
     if ($wpf.chkCheckOnly.IsChecked -eq $true) {
@@ -439,6 +473,7 @@ $inputXML = @"
                 <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ActiveBorderColorKey}}"/>
             </Rectangle.Stroke>
         </Rectangle>
+        <Label x:Name="lblabout" Content="" HorizontalAlignment="Left" Margin="762,10,0,0" VerticalAlignment="Top" Width="22"/>
     </Grid>
 </Window>
 "@
@@ -492,6 +527,7 @@ $wpf.btnQuit.add_Click({
     $wpf.$FormName.Close()
 })
 
+$wpf.lblAbout_AddClick($lblabout_Click)
 #endregion
 #End Buttons region
 
