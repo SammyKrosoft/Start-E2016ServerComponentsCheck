@@ -12,22 +12,24 @@
     https://github.com/SammyKrosoft
 #>
 $language = "EN"
-$Version = "v1.5.4"
+$Version = "v1.6"
 <#Change history
+- v1.6
+    Added HealthAPI requester
 - v1.5.4
-Add maple leaf as icon
+    Add maple leaf as icon
 - v1.5.3
-Add about (hidden)
+    Add about (hidden)
 - v1.5.2
-Added version number in Title
+    Added version number in Title
 - v1.5.1
-Deactivate the form while running
-Reactivate the form while running
+    Deactivate the form while running
+    Reactivate the form while running
 - v1.5:
-Added ability to filter by server or display for all servers (# Servers...)
-Added basic stats (# active components / # inactive components)
+    Added ability to filter by server or display for all servers (# Servers...)
+    Added basic stats (# active components / # inactive components)
 - v1:
-First published version
+    First published version
 #>
 
 Function IsPSV3 {
@@ -213,9 +215,9 @@ Function Check-E2016ComponentStateToActive {
 
     $ExchangeNamesList = @()
     if ($wpf.comboSelectExchangeVersion.SelectedValue -match "Exchange 2016"){
-        $ExchangeServers = Get-ExchangeServer | ? {$_.AdminDisplayVersion -match "15.1"}
+        $ExchangeServers = Get-ExchangeServer | ? {$_.AdminDisplayVersion -match "15.1" -and -not ($_.ServerRole -match "Edge")}
     } Else {
-        $ExchangeServers = Get-ExchangeServer | ? {$_.AdminDisplayVersion -match "15.0"}
+        $ExchangeServers = Get-ExchangeServer | ? {$_.AdminDisplayVersion -match "15.0" -and -not ($_.ServerRole -match "Edge")}
     }
     
     If ($ExchangeServers -eq $null) {
@@ -457,6 +459,7 @@ $inputXML = @"
             <ComboBoxItem Content="Sidelined"/>
             <ComboBoxItem Content="Functional"/>
             <ComboBoxItem Content="Deployment"/>
+            <ComboBoxItem Content="HealthAPI"/>
         </ComboBox>
         <Label x:Name="lblRequester" Content="Requester:" HorizontalAlignment="Left" Margin="121,357,0,0" VerticalAlignment="Top" Width="72"/>
         <ComboBox x:Name="comboBoxServers" HorizontalAlignment="Left" Margin="612,124,0,0" VerticalAlignment="Top" Width="120"/>
