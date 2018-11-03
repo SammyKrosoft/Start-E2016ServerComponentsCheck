@@ -12,8 +12,10 @@
     https://github.com/SammyKrosoft
 #>
 $language = "EN"
-$Version = "v1.6"
+$Version = "v1.6.1"
 <#Change history
+- v1.6.1
+    added GUI error message when Exchange tools not present
 - v1.6
     Excluded Edge servers for cases when Edge are installed on the AD forest instead
     of the recommended DMZ (??)
