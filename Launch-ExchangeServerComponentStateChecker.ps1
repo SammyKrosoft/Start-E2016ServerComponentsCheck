@@ -108,6 +108,14 @@ Function Test-ExchTools(){
         $ExchInstalledStatus = $false
         $Message = "Exchange Tools are not present ! This script/tool need these. Exiting..."
         Write-Host $Message -ForegroundColor red -BackgroundColor Blue
+        # Add-Type -AssemblyName presentationframework, presentationcore
+        # Option #4 - a message, a title, buttons, and an icon
+        # More info : https://msdn.microsoft.com/en-us/library/system.windows.messageboximage.aspx
+        $msg = "You must run this tool from an Exchange-enabled PowerShell console like Exchange Management Console or a PowerShell session where you imported an Exchange session."
+        $Title = "Error - No Exchange Tools available !"
+        $Button = "Ok"
+        $Icon = "Error"
+        [System.Windows.MessageBox]::Show($msg,$Title, $Button, $icon)
         Exit
     }
     Return $ExchInstalledStatus
@@ -412,12 +420,14 @@ Function Run-Command {
 
 #First check for PowerShell version ... if PowerShell <v3, exit
 IsPSV3 | out-null
-#Immediately test for Exchange tools => if not loaded, exit script
-If (!(Test-ExchTools)){exit}
+
 
 
 # Load a WPF GUI from a XAML file build with Visual Studio
 Add-Type -AssemblyName presentationframework, presentationcore
+
+#Immediately test for Exchange tools => if not loaded, exit script
+Test-ExchTools
 
 $wpf = @{ }
 # NOTE: Either load from a XAML file or paste the XAML file content in a "Here String"
