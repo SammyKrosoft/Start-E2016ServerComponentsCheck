@@ -429,7 +429,7 @@ IsPSV3 | out-null
 Add-Type -AssemblyName presentationframework, presentationcore
 
 #Immediately test for Exchange tools => if not loaded, exit script
-Test-ExchTools
+Test-ExchTools | out-null
 
 $wpf = @{ }
 # NOTE: Either load from a XAML file or paste the XAML file content in a "Here String"
