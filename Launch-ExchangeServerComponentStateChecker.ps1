@@ -12,8 +12,10 @@
     https://github.com/SammyKrosoft
 #>
 $language = "EN"
-$Version = "v1.6.1"
+$Version = "v1.6.2"
 <#Change history
+- v1.6.2 
+    added | out-null after test-ExchTools Exchange tool checker call
 - v1.6.1
     added GUI error message when Exchange tools not present
 - v1.6
