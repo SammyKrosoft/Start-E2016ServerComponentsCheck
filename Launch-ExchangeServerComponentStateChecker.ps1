@@ -81,7 +81,6 @@ Function Update-ListView {
         $wpf.txtNbActiveComponents.text = $TotalNbActiveComponents
         $wpf.txtNbInactiveComponents.text = $TotalNbInactiveComponents
     }
-
 }
 Function Test-ExchTools(){
     <#
