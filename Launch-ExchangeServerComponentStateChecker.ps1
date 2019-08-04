@@ -1,4 +1,15 @@
-﻿<#
+﻿<#PSScriptInfo
+
+.VERSION 1.6.2
+
+.GUID 97217c9e-9c65-471c-9c2f-18a839603eb2
+
+.AUTHOR SammyKrosoft
+
+.COMPANYNAME
+#>
+
+<#
 .SYNOPSIS
     This is a WPF GUI that helps to check and bring Exchange Server components to active state.
 
