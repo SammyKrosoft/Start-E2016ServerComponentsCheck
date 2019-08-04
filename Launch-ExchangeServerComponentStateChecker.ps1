@@ -1,6 +1,6 @@
 ﻿<#PSScriptInfo
 
-.VERSION 1.6.2
+.VERSION 1.6.3
 
 .GUID 97217c9e-9c65-471c-9c2f-18a839603eb2
 
@@ -14,7 +14,10 @@
     This is a WPF GUI that helps to check and bring Exchange Server components to active state.
 
 .DESCRIPTION
-    This is a WPF GUI that helps to check and bring Exchange Server components to active state.    Longer description of what this script does
+    This is a WPF GUI that helps to check and bring Exchange Server components to active state.
+
+    You can list components and filter to view only inactive components, and choose the requester
+    with which you wish to start one or more inactive components.
 
 .NOTES
     See https://github.com/SammyKrosoft for Readme.md and screenshots...
@@ -23,8 +26,9 @@
     https://github.com/SammyKrosoft
 #>
 $language = "EN"
-$Version = "v1.6.2"
+$Version = "v1.6.3"
 <#Change history
+- v1.6.3 - added PSScriptInfo and update Description for PSGallery publishing
 - v1.6.2 
     added | out-null after test-ExchTools Exchange tool checker call
 - v1.6.1
