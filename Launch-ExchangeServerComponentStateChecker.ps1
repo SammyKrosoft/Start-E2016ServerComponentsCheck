@@ -1,6 +1,6 @@
 ﻿<#PSScriptInfo
 
-.VERSION 1.6.3
+.VERSION 1.6.4
 
 .GUID 97217c9e-9c65-471c-9c2f-18a839603eb2
 
@@ -29,8 +29,9 @@
     https://github.com/SammyKrosoft
 #>
 $language = "EN"
-$Version = "v1.6.3"
+$Version = "v1.6.4"
 <#Change history
+- v1.6.4 - added Github link in description
 - v1.6.3 - added PSScriptInfo and update Description for PSGallery publishing
 - v1.6.2 
     added | out-null after test-ExchTools Exchange tool checker call
