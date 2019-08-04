@@ -19,6 +19,9 @@
     You can list components and filter to view only inactive components, and choose the requester
     with which you wish to start one or more inactive components.
 
+    More information here: 
+    https://github.com/SammyKrosoft/Start-E2016ServerComponentsCheck
+
 .NOTES
     See https://github.com/SammyKrosoft for Readme.md and screenshots...
 
