@@ -247,9 +247,9 @@ Function Check-E2016ComponentStateToActive {
 
     $ExchangeNamesList = @()
     if ($wpf.comboSelectExchangeVersion.SelectedValue -match "Exchange 2016"){
-        $ExchangeServers = Get-ExchangeServer | ? {$_.AdminDisplayVersion -match "15.1" -and -not ($_.ServerRole -match "Edge")}
+        $ExchangeServers = Get-ExchangeServer | ? {$_.AdminDisplayVersion -match "15\.1" -and -not ($_.ServerRole -match "Edge")}
     } Else {
-        $ExchangeServers = Get-ExchangeServer | ? {$_.AdminDisplayVersion -match "15.0" -and -not ($_.ServerRole -match "Edge")}
+        $ExchangeServers = Get-ExchangeServer | ? {$_.AdminDisplayVersion -match "15\.0" -and -not ($_.ServerRole -match "Edge")}
     }
     
     If ($ExchangeServers -eq $null) {
@@ -304,7 +304,7 @@ Function Check-E2016ComponentStateToActive {
 
         #$ComponentStateStatus | ft Component,State -Autosize
         $InactiveComponents = $ComponentStateStatus | ? {$_.State -eq "Inactive"}
-        $ACtiveComponents = $ComponentStateStatus | ? {$_.State -eq "Active"}
+        $ActiveComponents = $ComponentStateStatus | ? {$_.State -eq "Active"}
         
         $NbActiveComponents = $ACtiveComponents.Count
         If ($NbActiveComponents -eq $null){$NbActiveComponents = 0}
@@ -373,6 +373,7 @@ Function Check-E2016ComponentStateToActive {
             Server = $_.Identity
             Component = $_.Component
             State = $_.State
+            Requester = $_.Requester
         }
         $PSObjectServerComponentsColl += $PSObjectSrvComp
     }
