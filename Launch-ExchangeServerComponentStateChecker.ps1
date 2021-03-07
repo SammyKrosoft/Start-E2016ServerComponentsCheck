@@ -381,13 +381,12 @@ Function Check-E2016ComponentStateToActive {
 
     $PSObjectServerComponentsColl = @()
     $ServerComponentsCollection | ForEach-Object {
-        $ComponentsStateLastRequester = $_ | Select-Object -ExpandProperty LocalStates | Sort-Object TimeStamp | Select-Object -Last 1
-        Write-host $ComponentsStateLastRequester -ForegroundColor red -BackgroundColor Yellow
+        $ComponentsStateLastRequester = ($_ | Select-Object -ExpandProperty LocalStates | Sort-Object TimeStamp | Select-Object -Last 1).Requester
         $PSObjectSrvComp = [PSCustomObject]@{
             Server = $_.Identity
             Component = $_.Component
             State = $_.State
-            Requester = $ComponentsStateLastRequester.Requester
+            Requester = $ComponentsStateLastRequester
         }
         $PSObjectServerComponentsColl += $PSObjectSrvComp
     }
@@ -502,7 +501,7 @@ $inputXML = @"
                 <DataGridTextColumn Binding="{Binding Server}" Header="Server"/>
                 <DataGridTextColumn Binding="{Binding Component}" Header="Component"/>
                 <DataGridTextColumn Binding="{Binding State}" Header="State"/>
-                <DataGridTextColumn Binding="{Binding State}" Header="Requester"/>
+                <DataGridTextColumn Binding="{Binding Requester}" Header="Requester"/>
             </DataGrid.Columns>
         </DataGrid>
         <ComboBox x:Name="comboBoxRequester" HorizontalAlignment="Left" Margin="198,357,0,0" VerticalAlignment="Top" Width="120" SelectedIndex="2" IsEnabled="False">
