@@ -32,7 +32,7 @@ $language = "EN"
 $Version = "v1.7.0"
 <#Change history
 - v1.7.0 - added "Edge" checkbox to check Edge servers only, and fixed Requester information to see which requester stopped or
-started the component for the last time
+started the component for the last time.
 - v1.6.5 - changed ExchToolsCheck to test on "Get-ExchangeServer" instead of "Get-Mailbox" to be usable on Edge servers
 - v1.6.4 - added Github link in description
 - v1.6.3 - added PSScriptInfo and update Description for PSGallery publishing
