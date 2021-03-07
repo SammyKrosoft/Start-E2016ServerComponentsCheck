@@ -248,12 +248,22 @@ Function Check-E2016ComponentStateToActive {
     Update-WPFProgressBarAndStatus $msg $p
 
     $ExchangeNamesList = @()
-    if ($wpf.comboSelectExchangeVersion.SelectedValue -match "Exchange 2016"){
-        $ExchangeServers = Get-ExchangeServer | ? {$_.AdminDisplayVersion -match "15\.1" -and -not ($_.ServerRole -match "Edge")}
+    if ($wpf.chkEdgeServer.Ischecked -eq $True){
+        if ($wpf.comboSelectExchangeVersion.SelectedValue -match "Exchange 2016"){
+            $ExchangeServers = Get-ExchangeServer | ? {$_.AdminDisplayVersion -match "15\.1" -and ($_.ServerRole -match "Edge")}
+        } Elseif ($wpf.comboSelectExchangeVersion.SelectedValue -match "Exchange 2013") {
+            $ExchangeServers = Get-ExchangeServer | ? {$_.AdminDisplayVersion -match "15\.0" -and ($_.ServerRole -match "Edge")}
+        } Elseif ($wpf.comboSelectExchangeVersion.SelectedValue -match "Exchange 2019") {
+            $ExchangeServers = Get-ExchangeServer | ? {$_.AdminDisplayVersion -match "15\.2" -and ($_.ServerRole -match "Edge")}
+        }
     } Else {
-        $ExchangeServers = Get-ExchangeServer | ? {$_.AdminDisplayVersion -match "15\.0" -and -not ($_.ServerRole -match "Edge")}
+        if ($wpf.comboSelectExchangeVersion.SelectedValue -match "Exchange 2016"){
+            $ExchangeServers = Get-ExchangeServer | ? {$_.AdminDisplayVersion -match "15\.1" -and -not ($_.ServerRole -match "Edge")}
+        } Elseif ($wpf.comboSelectExchangeVersion.SelectedValue -match "Exchange 2013") {
+            $ExchangeServers = Get-ExchangeServer | ? {$_.AdminDisplayVersion -match "15\.2" -and -not ($_.ServerRole -match "Edge")}
+        }
     }
-    
+
     If ($ExchangeServers -eq $null) {
         # Option #4 - a message, a title, buttons, and an icon
         # More info : https://msdn.microsoft.com/en-us/library/system.windows.messageboximage.aspx
