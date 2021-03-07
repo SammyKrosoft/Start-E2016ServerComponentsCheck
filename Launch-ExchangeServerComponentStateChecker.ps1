@@ -381,12 +381,13 @@ Function Check-E2016ComponentStateToActive {
 
     $PSObjectServerComponentsColl = @()
     $ServerComponentsCollection | ForEach-Object {
-        $ComponentsStateLastRequestor = $_ | Select-Object -ExpandProperty LocalStates | Sort-Object TimeStamp | Select-Object -Last 1
+        $ComponentsStateLastRequester = $_ | Select-Object -ExpandProperty LocalStates | Sort-Object TimeStamp | Select-Object -Last 1
+        Write-host $ComponentsStateLastRequester -ForegroundColor red -BackgroundColor Yellow
         $PSObjectSrvComp = [PSCustomObject]@{
             Server = $_.Identity
             Component = $_.Component
             State = $_.State
-            Requester = $ComponentsStateLastRequestor
+            Requester = $ComponentsStateLastRequester.Requester
         }
         $PSObjectServerComponentsColl += $PSObjectSrvComp
     }
