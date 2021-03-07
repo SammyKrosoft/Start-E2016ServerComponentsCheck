@@ -1,6 +1,6 @@
 ﻿<#PSScriptInfo
 
-.VERSION 1.6.4
+.VERSION 1.6.5
 
 .GUID 97217c9e-9c65-471c-9c2f-18a839603eb2
 
@@ -29,8 +29,9 @@
     https://github.com/SammyKrosoft
 #>
 $language = "EN"
-$Version = "v1.6.4"
+$Version = "v1.6.5"
 <#Change history
+- v1.6.5 - changed ExchToolsCheck to test on "Get-ExchangeServer" instead of "Get-Mailbox" to be usable on Edge servers
 - v1.6.4 - added Github link in description
 - v1.6.3 - added PSScriptInfo and update Description for PSGallery publishing
 - v1.6.2 
@@ -120,7 +121,7 @@ Function Test-ExchTools(){
     #>
     Try
     {
-        Get-command Get-MAilbox -ErrorAction Stop
+        Get-command Get-ExchangeServer -ErrorAction Stop
         $ExchInstalledStatus = $true
         $Message = "Exchange tools are present !"
         Write-Host $Message -ForegroundColor Blue -BackgroundColor Red
