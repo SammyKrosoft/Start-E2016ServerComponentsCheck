@@ -1,6 +1,6 @@
 ﻿<#PSScriptInfo
 
-.VERSION 1.6.5
+.VERSION 1.7.0
 
 .GUID 97217c9e-9c65-471c-9c2f-18a839603eb2
 
@@ -29,8 +29,9 @@
     https://github.com/SammyKrosoft
 #>
 $language = "EN"
-$Version = "v1.6.5"
+$Version = "v1.7.0"
 <#Change history
+- v1.7.0 - added 
 - v1.6.5 - changed ExchToolsCheck to test on "Get-ExchangeServer" instead of "Get-Mailbox" to be usable on Edge servers
 - v1.6.4 - added Github link in description
 - v1.6.3 - added PSScriptInfo and update Description for PSGallery publishing
@@ -471,6 +472,9 @@ $inputXML = @"
             <ComboBoxItem Content="Exchange 2016"/>
         </ComboBox>
         <CheckBox x:Name="chkCheckOnly" Content="CheckOnly" HorizontalAlignment="Left" Margin="10,151,0,0" VerticalAlignment="Top" IsChecked="True"/>
+        <CheckBox x:Name="chkInactiveOnly" Content="Show Inactive Only" HorizontalAlignment="Left" Margin="612,174,0,0" VerticalAlignment="Top"/>
+        <CheckBox x:Name="chkEdgeServer" Content="Edge Server" HorizontalAlignment="Left" Margin="144,128,0,0" VerticalAlignment="Top"/>
+        <CheckBox x:Name="chkHybridServer" Content="HybridServer" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,171,0,0"/>
         <TextBox HorizontalAlignment="Left" Height="79" Margin="144,10,0,0" TextWrapping="Wrap" Text="Exchange 2013/2016 Server Component Checker" VerticalAlignment="Top" Width="518" TextAlignment="Center" VerticalContentAlignment="Center" FontSize="20" FontWeight="Bold" IsReadOnly="True">
             <TextBox.Effect>
                 <DropShadowEffect ShadowDepth="10" Color="#FFACD151"/>
@@ -479,15 +483,14 @@ $inputXML = @"
         <Button x:Name="btnRun" Content="Run" HorizontalAlignment="Left" Margin="12,357,0,0" VerticalAlignment="Top" Width="74"/>
         <Button x:Name="btnQuit" Content="Quit" HorizontalAlignment="Left" Margin="681,380,0,0" VerticalAlignment="Top" Width="75"/>
         <Label Content="List of Exchange components and their state" HorizontalAlignment="Left" Margin="251,168,0,0" VerticalAlignment="Top" Width="246"/>
-        <CheckBox x:Name="chkHybridServer" Content="HybridServer" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,171,0,0"/>
         <ProgressBar x:Name="ProgressBar" HorizontalAlignment="Left" Height="28" Margin="10,441,0,0" VerticalAlignment="Top" Width="762"/>
         <Label x:Name="lblStatus" Content="Ready !" HorizontalAlignment="Left" Margin="12,409,0,0" VerticalAlignment="Top" Width="760"/>
-        <CheckBox x:Name="chkInactiveOnly" Content="Show Inactive Only" HorizontalAlignment="Left" Margin="612,174,0,0" VerticalAlignment="Top"/>
         <DataGrid x:Name="ListView" HorizontalAlignment="Left" Height="144" Margin="10,200,0,0" VerticalAlignment="Top" Width="746" AutoGenerateColumns="False">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding Server}" Header="Server"/>
                 <DataGridTextColumn Binding="{Binding Component}" Header="Component"/>
                 <DataGridTextColumn Binding="{Binding State}" Header="State"/>
+                <DataGridTextColumn Binding="{Binding State}" Header="Requester"/>
             </DataGrid.Columns>
         </DataGrid>
         <ComboBox x:Name="comboBoxRequester" HorizontalAlignment="Left" Margin="198,357,0,0" VerticalAlignment="Top" Width="120" SelectedIndex="2" IsEnabled="False">
