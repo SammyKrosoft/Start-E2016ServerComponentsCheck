@@ -380,12 +380,13 @@ Function Check-E2016ComponentStateToActive {
     #sleep 1
 
     $PSObjectServerComponentsColl = @()
-    $ServerComponentsCollection | Foreach {
+    $ServerComponentsCollection | ForEach-Object {
+        $ComponentsStateLastRequestor = $_ | Select-Object -ExpandProperty LocalStates | Sort-Object TimeStamp | Select-Object -Last 1
         $PSObjectSrvComp = [PSCustomObject]@{
             Server = $_.Identity
             Component = $_.Component
             State = $_.State
-            Requester = $_.Requester
+            Requester = $ComponentsStateLastRequestor
         }
         $PSObjectServerComponentsColl += $PSObjectSrvComp
     }
