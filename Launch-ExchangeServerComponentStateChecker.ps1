@@ -1,6 +1,6 @@
 ﻿<#PSScriptInfo
 
-.VERSION 1.7.0
+.VERSION 1.7.1
 
 .GUID 97217c9e-9c65-471c-9c2f-18a839603eb2
 
@@ -29,8 +29,9 @@
     https://github.com/SammyKrosoft
 #>
 $language = "EN"
-$Version = "v1.7.0"
+$Version = "v1.7.1"
 <#Change history
+- v1.7.1 - updated for component in "Daining" state (Transport component), starting all component NOT in "Active" State instead of all components in "Inactive" state
 - v1.7.0 - added "Edge" checkbox to check Edge servers only, and fixed Requester information to see which requester stopped or
 started the component for the last time.
 - v1.6.5 - changed ExchToolsCheck to test on "Get-ExchangeServer" instead of "Get-Mailbox" to be usable on Edge servers
