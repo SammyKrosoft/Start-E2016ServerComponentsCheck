@@ -87,9 +87,9 @@ Function Update-ListView {
     if ($Global:GlobalResult -ne $null){
         if ($wpf.chkInactiveOnly.isChecked){
             if ($wpf.comboBoxServers.selectedValue -eq $Global:FirstComboBoxServersValue){
-                $wpf.ListView.ItemsSource = $Global:GlobalResult | ? {$_.State -eq "Inactive"}                
+                $wpf.ListView.ItemsSource = $Global:GlobalResult | ? {$_.State -ne "Active"}                
             } Else {
-                $wpf.ListView.ItemsSource = $Global:GlobalResult | ? {$_.State -eq "Inactive" -and $_.Server -eq $($wpf.comboBoxServers.SelectedValue)}
+                $wpf.ListView.ItemsSource = $Global:GlobalResult | ? {$_.State -ne "Active" -and $_.Server -eq $($wpf.comboBoxServers.SelectedValue)}
             }
         } Else {
             if ($wpf.comboBoxServers.selectedValue -ne $Global:FirstComboBoxServersValue){
@@ -98,7 +98,7 @@ Function Update-ListView {
                 $wpf.ListView.ItemsSource = $Global:GlobalResult}
         }
         $TotalNbActiveComponents = ($wpf.ListView.ItemsSource | ? {$_.State -eq "Active"}).count
-        $TotalNbInactiveComponents = ($wpf.ListView.ItemsSource | ? {$_.State -eq "Inactive"}).count
+        $TotalNbInactiveComponents = ($wpf.ListView.ItemsSource | ? {$_.State -ne "Active"}).count
     
         $wpf.txtNbActiveComponents.text = $TotalNbActiveComponents
         $wpf.txtNbInactiveComponents.text = $TotalNbInactiveComponents
@@ -316,7 +316,7 @@ Function Check-E2016ComponentStateToActive {
         }
 
         #$ComponentStateStatus | ft Component,State -Autosize
-        $InactiveComponents = $ComponentStateStatus | ? {$_.State -eq "Inactive"}
+        $InactiveComponents = $ComponentStateStatus | ? {$_.State -ne "Active"}
         $ActiveComponents = $ComponentStateStatus | ? {$_.State -eq "Active"}
         
         $NbActiveComponents = $ACtiveComponents.Count
@@ -354,7 +354,7 @@ Function Check-E2016ComponentStateToActive {
                 }
             
                 #$ComponentStateStatus | ft Component,State -Autosize
-                $InactiveComponents = $ComponentStateStatus | ? {$_.State -eq "Inactive"}
+                $InactiveComponents = $ComponentStateStatus | ? {$_.State -ne "Active"}
                 $ACtiveComponents = $ComponentStateStatus | ? {$_.State -eq "Active"}
                 
                 $NbActiveComponents = $ACtiveComponents.Count
@@ -395,7 +395,7 @@ Function Check-E2016ComponentStateToActive {
     $wpf.ListView.ItemsSource = $PSObjectServerComponentsColl
 
     $TotalNbActiveComponents = ($wpf.ListView.ItemsSource | ? {$_.State -eq "Active"}).count
-    $TotalNbInactiveComponents = ($wpf.ListView.ItemsSource | ? {$_.State -eq "Inactive"}).count
+    $TotalNbInactiveComponents = ($wpf.ListView.ItemsSource | ? {$_.State -ne "Active"}).count
 
     $wpf.txtNbActiveComponents.text = $TotalNbActiveComponents
     $wpf.txtNbInactiveComponents.text = $TotalNbInactiveComponents
