@@ -1,6 +1,6 @@
 ﻿<#PSScriptInfo
 
-.VERSION 1.7.0
+.VERSION 1.7.1
 
 .GUID 97217c9e-9c65-471c-9c2f-18a839603eb2
 
@@ -29,8 +29,9 @@
     https://github.com/SammyKrosoft
 #>
 $language = "EN"
-$Version = "v1.8.0"
+$Version = "v1.8.1"
 <#Change history
+- v1.7.1 - updated for component in "Daining" state (Transport component), starting all component NOT in "Active" State instead of all components in "Inactive" state
 - v1.8.0 - added support for Exchange 2019
 - v1.7.0 - added "Edge" checkbox to check Edge servers only, and fixed Requester information to see which requester stopped or
 started the component for the last time.
@@ -88,9 +89,9 @@ Function Update-ListView {
     if ($Global:GlobalResult -ne $null){
         if ($wpf.chkInactiveOnly.isChecked){
             if ($wpf.comboBoxServers.selectedValue -eq $Global:FirstComboBoxServersValue){
-                $wpf.ListView.ItemsSource = $Global:GlobalResult | ? {$_.State -eq "Inactive"}                
+                $wpf.ListView.ItemsSource = $Global:GlobalResult | ? {$_.State -ne "Active"}                
             } Else {
-                $wpf.ListView.ItemsSource = $Global:GlobalResult | ? {$_.State -eq "Inactive" -and $_.Server -eq $($wpf.comboBoxServers.SelectedValue)}
+                $wpf.ListView.ItemsSource = $Global:GlobalResult | ? {$_.State -ne "Active" -and $_.Server -eq $($wpf.comboBoxServers.SelectedValue)}
             }
         } Else {
             if ($wpf.comboBoxServers.selectedValue -ne $Global:FirstComboBoxServersValue){
@@ -99,7 +100,7 @@ Function Update-ListView {
                 $wpf.ListView.ItemsSource = $Global:GlobalResult}
         }
         $TotalNbActiveComponents = ($wpf.ListView.ItemsSource | ? {$_.State -eq "Active"}).count
-        $TotalNbInactiveComponents = ($wpf.ListView.ItemsSource | ? {$_.State -eq "Inactive"}).count
+        $TotalNbInactiveComponents = ($wpf.ListView.ItemsSource | ? {$_.State -ne "Active"}).count
     
         $wpf.txtNbActiveComponents.text = $TotalNbActiveComponents
         $wpf.txtNbInactiveComponents.text = $TotalNbInactiveComponents
@@ -318,7 +319,7 @@ Function Check-E2016ComponentStateToActive {
         }
 
         #$ComponentStateStatus | ft Component,State -Autosize
-        $InactiveComponents = $ComponentStateStatus | ? {$_.State -eq "Inactive"}
+        $InactiveComponents = $ComponentStateStatus | ? {$_.State -ne "Active"}
         $ActiveComponents = $ComponentStateStatus | ? {$_.State -eq "Active"}
         
         $NbActiveComponents = $ACtiveComponents.Count
@@ -356,7 +357,7 @@ Function Check-E2016ComponentStateToActive {
                 }
             
                 #$ComponentStateStatus | ft Component,State -Autosize
-                $InactiveComponents = $ComponentStateStatus | ? {$_.State -eq "Inactive"}
+                $InactiveComponents = $ComponentStateStatus | ? {$_.State -ne "Active"}
                 $ACtiveComponents = $ComponentStateStatus | ? {$_.State -eq "Active"}
                 
                 $NbActiveComponents = $ACtiveComponents.Count
@@ -397,7 +398,7 @@ Function Check-E2016ComponentStateToActive {
     $wpf.ListView.ItemsSource = $PSObjectServerComponentsColl
 
     $TotalNbActiveComponents = ($wpf.ListView.ItemsSource | ? {$_.State -eq "Active"}).count
-    $TotalNbInactiveComponents = ($wpf.ListView.ItemsSource | ? {$_.State -eq "Inactive"}).count
+    $TotalNbInactiveComponents = ($wpf.ListView.ItemsSource | ? {$_.State -ne "Active"}).count
 
     $wpf.txtNbActiveComponents.text = $TotalNbActiveComponents
     $wpf.txtNbInactiveComponents.text = $TotalNbInactiveComponents
