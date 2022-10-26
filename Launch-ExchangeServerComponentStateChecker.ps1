@@ -29,8 +29,9 @@
     https://github.com/SammyKrosoft
 #>
 $language = "EN"
-$Version = "v1.7.0"
+$Version = "v1.8.0"
 <#Change history
+- v1.8.0 - added support for Exchange 2019
 - v1.7.0 - added "Edge" checkbox to check Edge servers only, and fixed Requester information to see which requester stopped or
 started the component for the last time.
 - v1.6.5 - changed ExchToolsCheck to test on "Get-ExchangeServer" instead of "Get-Mailbox" to be usable on Edge servers
@@ -261,8 +262,9 @@ Function Check-E2016ComponentStateToActive {
         if ($wpf.comboSelectExchangeVersion.SelectedValue -match "Exchange 2016"){
             $ExchangeServers = Get-ExchangeServer | ? {$_.AdminDisplayVersion -match "15\.1" -and -not ($_.ServerRole -match "Edge")}
         } Elseif ($wpf.comboSelectExchangeVersion.SelectedValue -match "Exchange 2013") {
+            $ExchangeServers = Get-ExchangeServer | ? {$_.AdminDisplayVersion -match "15\.0" -and -not ($_.ServerRole -match "Edge")}
+        } Elseif ($wpf.comboSelectExchangeVersion.SelectedValue -match "Exchange 2019") {
             $ExchangeServers = Get-ExchangeServer | ? {$_.AdminDisplayVersion -match "15\.2" -and -not ($_.ServerRole -match "Edge")}
-        }
     }
 
     If ($ExchangeServers -eq $null) {
@@ -482,12 +484,13 @@ $inputXML = @"
         <ComboBox x:Name="comboSelectExchangeVersion" HorizontalAlignment="Left" Margin="10,124,0,0" VerticalAlignment="Top" Width="120" SelectedIndex="1" IsReadOnly="True">
             <ComboBoxItem Content="Exchange 2013"/>
             <ComboBoxItem Content="Exchange 2016"/>
+            <ComboBoxItem Content="Exchange 2019"/>
         </ComboBox>
         <CheckBox x:Name="chkCheckOnly" Content="CheckOnly" HorizontalAlignment="Left" Margin="10,151,0,0" VerticalAlignment="Top" IsChecked="True"/>
         <CheckBox x:Name="chkInactiveOnly" Content="Show Inactive Only" HorizontalAlignment="Left" Margin="612,174,0,0" VerticalAlignment="Top"/>
         <CheckBox x:Name="chkEdgeServer" Content="Edge Server" HorizontalAlignment="Left" Margin="144,128,0,0" VerticalAlignment="Top"/>
         <CheckBox x:Name="chkHybridServer" Content="HybridServer" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,171,0,0"/>
-        <TextBox HorizontalAlignment="Left" Height="79" Margin="144,10,0,0" TextWrapping="Wrap" Text="Exchange 2013/2016 Server Component Checker" VerticalAlignment="Top" Width="518" TextAlignment="Center" VerticalContentAlignment="Center" FontSize="20" FontWeight="Bold" IsReadOnly="True">
+        <TextBox HorizontalAlignment="Left" Height="79" Margin="144,10,0,0" TextWrapping="Wrap" Text="Exchange 2013/2016/2019 Server Component Checker" VerticalAlignment="Top" Width="518" TextAlignment="Center" VerticalContentAlignment="Center" FontSize="20" FontWeight="Bold" IsReadOnly="True">
             <TextBox.Effect>
                 <DropShadowEffect ShadowDepth="10" Color="#FFACD151"/>
             </TextBox.Effect>
