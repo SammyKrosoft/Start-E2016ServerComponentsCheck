@@ -408,6 +408,7 @@ Function Check-E2016ComponentStateToActive {
     return $PSObjectServerComponentsColl
 
 }
+}
 
 $lblabout_Click = {
     switch ($Language)
