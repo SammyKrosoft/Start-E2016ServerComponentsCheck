@@ -19,9 +19,9 @@ These “Server Components” are new in Exchange 2013/2016, these are part of t
 ![image](https://user-images.githubusercontent.com/33433229/198128768-50ec47d0-0eac-4f86-8236-ad5c6d6761ef.png)
  
 
-NOTE: once the components are gathered and show up, you can select all (click on one of the result cell, then CTRL+ a followed by CTRL + v) and paste it in a report, in Excel:
+NOTE: once the components are gathered and show up, you can select all (click on one of the result cell, then CTRL+ A followed by CTRL + C) and paste it in a report, in Excel, or anywhere else:
  
-![screenshot2](DocResources/image1.jpg)
+![image](https://user-images.githubusercontent.com/33433229/198129402-1dd9a1f9-e983-437d-898e-460069d079fa.png)
 
 And finally, you're able to start the Exchange Server Components with the requester of your choice (Maintenance, SideLine, Functional, Deployment,...) - just uncheck the **[ ] CheckOnly** check box, choose your requester, and click **[Run]**
 
