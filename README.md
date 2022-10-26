@@ -23,9 +23,9 @@ NOTE: once the components are gathered and show up, you can select all (click on
  
 ![image](https://user-images.githubusercontent.com/33433229/198129402-1dd9a1f9-e983-437d-898e-460069d079fa.png)
 
-And finally, you're able to start the Exchange Server Components with the requester of your choice (Maintenance, SideLine, Functional, Deployment,...) - just uncheck the **[ ] CheckOnly** check box, choose your requester, and click **[Run]**
+And finally, you're able to start the Exchange Server Components with the requester of your choice (Maintenance, SideLine, Functional, Deployment,...) - just uncheck the **[ ] CheckOnly** check box, choose your requester, and click **[Run]** - **NOTE**: if you see a component is Inactive with a specific Requester, you can only bring it "Active" with the same Requester that brought it "Inactive" (the one that is listed next to the "Inactive" state of the component).
 
-![screenshot3](DocResources/image2.jpg)
+![image](https://user-images.githubusercontent.com/33433229/198129910-98513430-8071-4978-97c4-745befd30177.png)
 
 More information on these Exchange Server Components:
 https://blogs.technet.microsoft.com/exchange/2013/09/26/server-component-states-in-exchange-2013/
