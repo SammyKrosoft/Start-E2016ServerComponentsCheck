@@ -31,7 +31,8 @@
 $language = "EN"
 $Version = "v1.8.1"
 <#Change history
-- v1.7.1 - updated for component in "Daining" state (Transport component), starting all component NOT in "Active" State instead of all components in "Inactive" state
+- v1.8.1 - merged changes 1.7.1 with 1.8.0
+- v1.7.1 - updated for component in "Draining" state (Transport component), starting all component NOT in "Active" State instead of all components in "Inactive" state
 - v1.8.0 - added support for Exchange 2019
 - v1.7.0 - added "Edge" checkbox to check Edge servers only, and fixed Requester information to see which requester stopped or
 started the component for the last time.
