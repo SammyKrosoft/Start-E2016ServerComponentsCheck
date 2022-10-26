@@ -407,7 +407,7 @@ Function Check-E2016ComponentStateToActive {
     $Global:GlobalResult = $PSObjectServerComponentsColl
     return $PSObjectServerComponentsColl
 
-}
+    }
 }
 
 $lblabout_Click = {
