@@ -1,4 +1,4 @@
-﻿<#PSScriptInfo
+<#PSScriptInfo
 
 .VERSION 1.7.1
 
@@ -90,9 +90,10 @@ Function Update-ListView {
     if ($Global:GlobalResult -ne $null){
         if ($wpf.chkInactiveOnly.isChecked){
             if ($wpf.comboBoxServers.selectedValue -eq $Global:FirstComboBoxServersValue){
-                $wpf.ListView.ItemsSource = $Global:GlobalResult | ? {$_.State -ne "Active"}                
+                $wpf.ListView.ItemsSource = @($Global:GlobalResult | ? {$_.State -ne "Active"})
             } Else {
-                $wpf.ListView.ItemsSource = $Global:GlobalResult | ? {$_.State -ne "Active" -and $_.Server -eq $($wpf.comboBoxServers.SelectedValue)}
+                
+                $wpf.ListView.ItemsSource = @($Global:GlobalResult | ? {$_.State -ne "Active" -and $_.Server -eq $($wpf.comboBoxServers.SelectedValue)})
             }
         } Else {
             if ($wpf.comboBoxServers.selectedValue -ne $Global:FirstComboBoxServersValue){
